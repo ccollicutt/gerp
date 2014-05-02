@@ -26,3 +26,21 @@ func Test_Grep_2(t *testing.T) {
 		t.Log("grep test 2 passed")
 	}
 }
+
+func Test_Exists_1(t *testing.T) {
+	err := exists("test/test_grep.txt")
+	if err != nil {
+		t.Error("exists did not pass test 1")
+	} else {
+		t.Log("exists test 1 passed")
+	}
+}
+
+func Test_Exists_2(t *testing.T) {
+	err := exists("test/doesnotexist.txt")
+	if err == nil {
+		t.Error("exists did not pass test 2")
+	} else {
+		t.Log("exists test 2 passed")
+	}
+}
