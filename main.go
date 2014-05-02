@@ -65,7 +65,7 @@ func list(re, path string) (fileArray []os.FileInfo) {
 	files, _ := ioutil.ReadDir(path)
 	for _, file := range files {
 
-		full_path := fmt.Sprint(path + "/" + file.Name())
+		full_path := fmt.Sprint(path + file.Name())
 		matches := grep(re, full_path)
 
 		for _, match := range matches {
