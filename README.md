@@ -3,7 +3,7 @@
 Half the time I try to run grep I end up typing gerp. I thought a good learning experience with golang would be to write a `grep`-like command line application that does the kind of grepping I usually do, which is looking for something in all the files in a directory, or also all the directories underneath as well (ie. recursive).
 
 [![Gobuild Download](http://gobuild.io/badge/github.com/curtisgithub/gerp/download.png)](http://gobuild.io/github.com/curtisgithub/gerp)
-
+[![Build Status](https://drone.io/github.com/curtisgithub/gerp/status.png)](https://drone.io/github.com/curtisgithub/gerp/latest)
 
 ##Example
 
