@@ -1,12 +1,12 @@
 package main
 
-// Original grep type code came from here: 
+// Original grep type code came from here:
 // https://github.com/StefanSchroeder/Golang-Regex-Tutorial/blob/master/01-chapter3.markdown
 
 import (
 	"bufio"
 	"fmt"
-	"github.com/codegangsta/cli"
+	"flag"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -43,37 +43,25 @@ func grep(re, filename string) (matches []string) {
 }
 
 // like ls recursive
-func walk(re, path string) (files []string) {
-
+func walk(path string) (allFiles []string) {
 	filepath.Walk(path, func(file string, info os.FileInfo, err error) error {
 		if file != path {
-			matches := grep(re, file)
-
-			for _, match := range matches {
-				fmt.Printf(file + ": ")
-				fmt.Println(match)
-			}
+			allFiles = append(allFiles, file)
 		}
 		return nil
 	})
-	return nil
+	return allFiles
 }
 
 // like ls
-func list(re, path string) (fileArray []os.FileInfo) {
-
+func list(path string) (allFiles []string) {
 	files, _ := ioutil.ReadDir(path)
 	for _, file := range files {
 
-		full_path := fmt.Sprint(path + file.Name())
-		matches := grep(re, full_path)
-
-		for _, match := range matches {
-			fmt.Printf(full_path + ": ")
-			fmt.Println(match)
-		}
+		full_path := fmt.Sprint(path + "/" + file.Name())
+		allFiles = append(allFiles, full_path)
 	}
-	return files
+	return allFiles
 }
 
 func exists(path string) (err error) {
@@ -83,40 +71,30 @@ func exists(path string) (err error) {
 
 func main() {
 
-	app := cli.NewApp()
-	app.Name = "gerp"
-	app.Usage = "gerp regex file"
-	app.Version = "0.1"
+	recursive := flag.Bool("r", false, "recursive")
 
-	app.Flags = []cli.Flag{
-		cli.BoolFlag{"recursive, r", "walk the directory"},
-	}
+	flag.Parse()
 
-	app.Action = func(c *cli.Context) {
+	args := flag.Args()
 
-		if len(c.Args()) != 2 {
-			fmt.Println("Usage: gerp [-r|--recursive] pattern file|directory")
-			os.Exit(1)
+	if len(args) != 2 {
+		fmt.Println("Usage: gerp [-r] pattern directory")
+	} else {
+		pattern := args[0]
+		dir := args[1]
+		var allFiles []string
+		var matches []string
+
+		if *recursive == true {
+			allFiles = walk(dir)
 		} else {
-
-			pattern := c.Args()[0]
-			path := c.Args()[1]
-
-			err := exists(path)
-			if err != nil {
-				fmt.Println(path + " does not exist")
-				os.Exit(1)
-			}
-
-			if c.Bool("recursive") == true {
-				walk(pattern, path)
-			} else {
-				list(pattern, path)
+			allFiles = list(dir)
+		}
+		for _, file := range allFiles {
+			matches = grep(pattern, file)
+			for _, match := range matches {
+				fmt.Println(file + ": " + match)
 			}
 		}
-
 	}
-
-	app.Run(os.Args)
-
 }

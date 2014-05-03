@@ -2,8 +2,32 @@ package main
 
 import (
 	"testing"
+	//	"fmt"
 )
 
+func Test_Walk_1(t *testing.T) {
+	allFiles := walk("./test")
+	for _, file := range allFiles {
+		t.Log(file)
+		if file != "test/test_grep.txt" {
+			t.Error("walk did not fine the right file")
+		} else {
+			t.Log("walk found the right file")
+		}
+	}
+}
+
+func Test_List_1(t *testing.T) {
+	allFiles := walk("./test")
+	for _, file := range allFiles {
+		t.Log(file)
+		if file != "test/test_grep.txt" {
+			t.Error("list did not fine the right file")
+		} else {
+			t.Log("list found the right file")
+		}
+	}
+}
 
 func Test_Grep_1(t *testing.T) {
 	test_matches := []string{"hi"}
