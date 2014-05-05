@@ -5,13 +5,18 @@ package main
 
 import (
 	"bufio"
-	"fmt"
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"regexp"
 )
+
+type Match struct {
+	file  string
+	match string
+}
 
 func grep(re, filename string) (matches []string) {
 	regex, err := regexp.Compile(re)
@@ -58,8 +63,8 @@ func list(path string) (allFiles []string) {
 	files, _ := ioutil.ReadDir(path)
 	for _, file := range files {
 
-		full_path := fmt.Sprint(path + "/" + file.Name())
-		allFiles = append(allFiles, full_path)
+		fullPath := fmt.Sprint(path + "/" + file.Name())
+		allFiles = append(allFiles, fullPath)
 	}
 	return allFiles
 }
@@ -69,19 +74,15 @@ func exists(path string) (err error) {
 	return err
 }
 
-func main() {
-
-	recursive := flag.Bool("r", false, "recursive")
-	flag.Parse()
-	args := flag.Args()
+func run(args []string, recursive *bool) (matches []Match) {
 
 	if len(args) != 2 {
-		fmt.Println("Usage: gerp [-r] pattern directory")
+		fmt.Println("Usage: gerp [-r] directory pattern")
 	} else {
-		pattern := args[0]
-		dir := args[1]
+		pattern := args[1]
+		dir := args[0]
 		var allFiles []string
-		var matches []string
+		var grepMatches []string
 
 		if *recursive == true {
 			allFiles = walk(dir)
@@ -89,10 +90,30 @@ func main() {
 			allFiles = list(dir)
 		}
 		for _, file := range allFiles {
-			matches = grep(pattern, file)
-			for _, match := range matches {
-				fmt.Println(file + ": " + match)
+			grepMatches = grep(pattern, file)
+			for _, match := range grepMatches {
+				fileMatch := Match{file, match}
+				matches = append(matches, fileMatch)
 			}
 		}
+		return matches
+	}
+	return nil
+}
+
+func main() {
+
+	recursive := flag.Bool("r", false, "recursive")
+	flag.Parse()
+	args := flag.Args()
+
+	fmt.Println(args)
+	fmt.Println(recursive)
+
+	allMatches := run(args, recursive)
+	for _, match := range allMatches {
+		//fmt.Println(file + ": " + match)
+		fmt.Printf(match.file + ": ")
+		fmt.Println(match.match)
 	}
 }

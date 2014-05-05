@@ -5,6 +5,26 @@ import (
 	//	"fmt"
 )
 
+func Test_Run_1(t *testing.T) {
+	args := []string{"./test", "hi"}
+	// for some reason the bool arg from recursive := flag.Bool("r", false, "recursive")
+	// in main is a pointer...
+
+	// https://groups.google.com/forum/#!topic/golang-nuts/OELe3zXuPV4
+    var tBool bool
+    recursive :=&tBool
+    *recursive = true
+
+	matches := run(args, recursive)
+	for _, match := range matches {
+		if match.file != "test/test_grep.txt" {
+			t.Error("run did not return the right file")
+		} else {
+			t.Log("run did return the right file")
+		}
+	}
+}
+
 func Test_Walk_1(t *testing.T) {
 	allFiles := walk("./test")
 	for _, file := range allFiles {
