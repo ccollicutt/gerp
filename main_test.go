@@ -18,11 +18,12 @@ func Test_Walk_1(t *testing.T) {
 }
 
 func Test_List_1(t *testing.T) {
-	allFiles := walk("./test")
+	allFiles := list("./test")
 	for _, file := range allFiles {
 		t.Log(file)
-		if file != "test/test_grep.txt" {
-			t.Error("list did not fine the right file")
+		if file != "./test/test_grep.txt" {
+			t.Log(file)
+			t.Error("list did not find the right file")
 		} else {
 			t.Log("list found the right file")
 		}

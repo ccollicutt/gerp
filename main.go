@@ -72,9 +72,7 @@ func exists(path string) (err error) {
 func main() {
 
 	recursive := flag.Bool("r", false, "recursive")
-
 	flag.Parse()
-
 	args := flag.Args()
 
 	if len(args) != 2 {
