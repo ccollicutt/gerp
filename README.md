@@ -12,7 +12,7 @@ Half the time I try to run grep I end up typing gerp. I thought a good learning 
 This will check all the files in the test directory to see if they contain the pattern "hi".
 
 ```bash
-curtis$ ./gerp test/ ji
+curtis$ ./gerp test hi
 test/test_grep.txt: hi
 ```
 
