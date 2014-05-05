@@ -107,9 +107,6 @@ func main() {
 	flag.Parse()
 	args := flag.Args()
 
-	fmt.Println(args)
-	fmt.Println(recursive)
-
 	allMatches := run(args, recursive)
 	for _, match := range allMatches {
 		//fmt.Println(file + ": " + match)
